@@ -200,8 +200,28 @@ app.get('/api/reportes-semanales', (req, res) => {
   });
 });
 
+// --- Historial de panel (últimas 24 horas) ---
+app.get('/api/panel-historico', (req, res) => {
+  const query = `
+    SELECT idPanel, energia, consumo, estado, fecha_hora
+    FROM panelSolar
+    WHERE fecha_hora >= NOW() - INTERVAL 1 DAY
+    ORDER BY fecha_hora ASC
+  `;
+
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error('Error al obtener datos del panel:', err);
+      return res.status(500).json({ error: 'Error al obtener datos del panel' });
+    }
+    res.json(results);
+  });
+});
+
+
 // --- Iniciar servidor ---
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
 });
+
