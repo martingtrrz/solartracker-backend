@@ -207,6 +207,7 @@ app.get('/api/panel-historico', (req, res) => {
     FROM panelSolar
     WHERE fecha_hora >= NOW() - INTERVAL 1 DAY
     ORDER BY fecha_hora ASC
+    LIMIT 10
   `;
 
   pool.query(query, (err, results) => {
